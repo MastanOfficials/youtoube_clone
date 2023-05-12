@@ -15,20 +15,26 @@ import { SEARCH_URL } from "../assets/images/constatnts/constents";
 const Header = () => {
   const [searchInput, setSearchInput] = useState("");
   // console.log(searchInput);
-  const dispatch = useDispatch();
+  const [serachResult,setSearchResult]=useState([])
+ 
 
   useEffect(() => {
-    setTimeout(() => {
-      getSearchQuery();
-      console.log(searchInput);
-    }, 200);
+   const timer= setTimeout(() => getSearchQuery(), 200);
+    return ()=>{
+      clearTimeout(timer)
+    }
   }, [searchInput]);
 
   const getSearchQuery = async () => {
     const searchQuery = await fetch(SEARCH_URL + searchInput);
-    const data = searchQuery.json();
-    console.log(data);
+    
+    const data = await searchQuery.json()
+    console.log(data)
+    setSearchResult(data[1])
+    // console.log(data)
+    
   };
+  const dispatch = useDispatch();
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
@@ -62,6 +68,7 @@ const Header = () => {
         </div>
         <div className="wrapper mr-4">
           <div className="searchBar">
+            <div>
             <input
               id="searchQueryInput"
               type="text"
@@ -70,11 +77,15 @@ const Header = () => {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
             />
+              
+            </div>
             <button
               id="searchQuerySubmit"
               type="submit"
               name="searchQuerySubmit"
             >
+           
+           
               <img src={serach} alt="" width="30px" mr-4 />
             </button>
             <button>
@@ -86,9 +97,12 @@ const Header = () => {
                 width="25px"
               />
             </button>
-            <button>sera</button>
+           
+            </div>
+            <div>
+            
           </div>
-          <div></div>
+       
         </div>
         <div className="d-flex justify-content-space-between mx-5 icons-items">
           <div className=" mx-3">
@@ -100,6 +114,11 @@ const Header = () => {
           <div className=" mx-3">
             <img src={user} alt="" height="10px " width="25px" />
           </div>
+
+          <div>{
+            serachResult.map(data=><div className="" key={searchInput.id}>{data}</div>)
+}
+</div>
         </div>
       </div>
     </>
